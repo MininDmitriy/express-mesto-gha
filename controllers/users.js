@@ -21,9 +21,6 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    if (userId.length !== 24) {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Некорректно передан _id пользователя' });
-    }
     const user = await User.findById(userId);
     if (user === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Пользователь по указанному _id не найден' });
@@ -31,6 +28,9 @@ const getUser = async (req, res) => {
     return res.status(SUCCESS).json(user);
   } catch (err) {
     console.log(err);
+    if (err.name === 'CastError') {
+      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Некорректно передан _id пользователя' });
+    }
     return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
   }
 };

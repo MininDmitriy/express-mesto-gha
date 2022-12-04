@@ -35,11 +35,10 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
-    const card = await Card.findById(cardId);
+    const card = await Card.findByIdAndRemove(cardId);
     if (card === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Карточка с указанным _id не найдена' });
     }
-    await Card.findByIdAndRemove(cardId);
     return res.status(SUCCESS).json({ message: 'Карточка успешно удалена' });
   } catch (err) {
     console.log(err);
@@ -53,9 +52,6 @@ const deleteCard = async (req, res) => {
 const likeCard = async (req, res) => {
   try {
     const { cardId } = req.params;
-    if (cardId.length !== 24) {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для постановки лайка' });
-    }
     const card = await Card.findById(cardId);
     if (card === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Передан несуществующий _id карточки' });
@@ -68,6 +64,9 @@ const likeCard = async (req, res) => {
     return res.status(SUCCESS).json({ message: 'Постановка лайка прошло успешно' });
   } catch (err) {
     console.log(err);
+    if (err.name === 'CastError') {
+      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для постановки лайка' });
+    }
     return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
   }
 };
@@ -75,9 +74,6 @@ const likeCard = async (req, res) => {
 const dislikeCard = async (req, res) => {
   try {
     const { cardId } = req.params;
-    if (cardId.length !== 24) {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для снятия лайка' });
-    }
     const card = await Card.findById(cardId);
     if (card === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Передан несуществующий _id карточки' });
@@ -90,6 +86,9 @@ const dislikeCard = async (req, res) => {
     return res.status(SUCCESS).json({ message: 'Снятие лайка прошло успешно' });
   } catch (err) {
     console.log(err);
+    if (err.name === 'CastError') {
+      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для постановки лайка' });
+    }
     return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
   }
 };
