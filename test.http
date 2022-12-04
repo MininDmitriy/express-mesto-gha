@@ -1,0 +1,10 @@
+POST http://localhost:3000/users
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "f",
+  "about": "Info about me",
+  "avatar": "https://i.pinimg.com/736x/46/12/c6/4612c6c13e7078a6fe2ca8ce63d3a252--s-movies-photo-s.jpg"
+}
+###
