@@ -35,6 +35,9 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
+    if (cardId.length !== 24) {
+      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректны1 _id удаляемой карточки' });
+    }
     const card = await Card.findById(cardId);
     if (card === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Карточка с указанным _id не найдена' });
