@@ -8,9 +8,6 @@ const ERROR_INTERNAL_SERVER = 500;
 const getCards = async (req, res) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    if (cards.length === 0) {
-      return res.status(ERROR_NOT_FOUND).json({ message: 'Карточки не найдены' });
-    }
     return res.status(SUCCESS).json(cards);
   } catch (err) {
     console.log(err);
@@ -35,10 +32,11 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
-    const card = await Card.findByIdAndRemove(cardId);
+    const card = await Card.findById(cardId);
     if (card === null) {
       return res.status(ERROR_NOT_FOUND).json({ message: 'Карточка с указанным _id не найдена' });
     }
+    await Card.findByIdAndRemove(cardId);
     return res.status(SUCCESS).json({ message: 'Карточка успешно удалена' });
   } catch (err) {
     console.log(err);
