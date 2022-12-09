@@ -1,17 +1,13 @@
 const Card = require('../models/card');
-
-const SUCCESS = 200;
-const ERROR_NOT_FOUND = 404;
-const ERROR_INCORRECT_DATE = 400;
-const ERROR_INTERNAL_SERVER = 500;
+const { message, errors } = require('../constants');
 
 const getCards = async (req, res) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    return res.status(SUCCESS).json(cards);
+    return res.status(errors.success).json(cards);
   } catch (err) {
     console.log(err);
-    return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
+    return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
 };
 
@@ -19,31 +15,30 @@ const createCard = async (req, res) => {
   try {
     const { name, link } = req.body;
     const card = await Card.create({ name, link, owner: req.user._id });
-    return res.status(SUCCESS).json(card);
+    return res.status(errors.created).json(card);
   } catch (err) {
     console.log(err);
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные при создании карточки' });
+      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.dateCard });
     }
-    return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
+    return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
 };
 
 const deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
-    const card = await Card.findById(cardId);
+    const card = await Card.findByIdAndRemove(cardId);
     if (card === null) {
-      return res.status(ERROR_NOT_FOUND).json({ message: 'Карточка с указанным _id не найдена' });
+      return res.status(errors.errorNotFound).json({ message: message.errorNotFound.cardId });
     }
-    await Card.findByIdAndRemove(cardId);
-    return res.status(SUCCESS).json({ message: 'Карточка успешно удалена' });
+    return res.status(errors.success).json({ message: message.success.cardDelete });
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректный _id удаляемой карточки' });
+      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.cardId });
     }
-    return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
+    return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
 };
 
@@ -52,20 +47,20 @@ const likeCard = async (req, res) => {
     const { cardId } = req.params;
     const card = await Card.findById(cardId);
     if (card === null) {
-      return res.status(ERROR_NOT_FOUND).json({ message: 'Передан несуществующий _id карточки' });
+      return res.status(errors.errorNotFound).json({ message: message.errorNotFound.cardId });
     }
     await Card.findByIdAndUpdate(
       cardId,
       { $addToSet: { likes: req.user._id } },
       { new: true },
     );
-    return res.status(SUCCESS).json({ message: 'Постановка лайка прошло успешно' });
+    return res.status(errors.success).json({ message: message.success.likeCard });
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для постановки лайка' });
+      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.likeCard });
     }
-    return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
+    return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
 };
 
@@ -74,20 +69,20 @@ const dislikeCard = async (req, res) => {
     const { cardId } = req.params;
     const card = await Card.findById(cardId);
     if (card === null) {
-      return res.status(ERROR_NOT_FOUND).json({ message: 'Передан несуществующий _id карточки' });
+      return res.status(errors.errorNotFound).json({ message: message.errorNotFound.cardId });
     }
     await Card.findByIdAndUpdate(
       cardId,
       { $pull: { likes: req.user._id } },
       { new: true },
     );
-    return res.status(SUCCESS).json({ message: 'Снятие лайка прошло успешно' });
+    return res.status(errors.success).json({ message: message.success.dislikeCard });
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(ERROR_INCORRECT_DATE).json({ message: 'Переданы некорректные данные для постановки лайка' });
+      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.dislikeCard });
     }
-    return res.status(ERROR_INTERNAL_SERVER).json({ message: 'На сервере произошла ошибка' });
+    return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
 };
 
