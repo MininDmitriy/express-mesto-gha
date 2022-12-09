@@ -22,7 +22,9 @@ const getUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.userId });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.userId,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -35,8 +37,10 @@ const createUser = async (req, res) => {
     return res.status(errors.created).json(user);
   } catch (err) {
     console.log(err);
-    if (err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.dateUser });
+    if (err.name === 'ValidationError') {
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.dateUser,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -57,7 +61,9 @@ const updateInfoUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.updateDateUser });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.updateDateUser,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -79,7 +85,9 @@ const updateAvatarUser = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.updateAvatarUser });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.updateAvatarUser,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }

@@ -19,7 +19,9 @@ const createCard = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.dateCard });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.dateCard,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -36,7 +38,9 @@ const deleteCard = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.cardId });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.cardId,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -58,7 +62,9 @@ const likeCard = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.likeCard });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.likeCard,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
@@ -80,7 +86,9 @@ const dislikeCard = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.name === 'CastError') {
-      return res.status(errors.errorIncorrectDate).json({ message: message.errorIncorrectDate.dislikeCard });
+      return res.status(errors.errorIncorrectDate).json({
+        message: message.errorIncorrectDate.dislikeCard,
+      });
     }
     return res.status(errors.errorInternalServer).json({ message: message.errorInternalServer });
   }
