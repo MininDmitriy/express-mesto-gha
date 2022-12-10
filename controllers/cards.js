@@ -18,7 +18,7 @@ const createCard = async (req, res) => {
     return res.status(errors.created).json(card);
   } catch (err) {
     console.log(err);
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       return res.status(errors.errorIncorrectDate).json({
         message: message.errorIncorrectDate.dateCard,
       });
