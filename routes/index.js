@@ -6,6 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const { login, createUser } = require('../controllers/users');
 const { NotFoundError } = require('../helpers/errors');
+const { checkAuth } = require('../middlewares/auth');
 
 routes.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -24,11 +25,16 @@ routes.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
+    avatar: Joi.string().custom((value, helpers) => {
+      if (/^(http|https):\/\/[^ "]+$/.test(value)) {
+        return value;
+      }
+      return helpers.message('Передан некорректный URL-адрес аватара пользователя');
+    }),
   }),
 }), createUser);
-routes.use('/users', userRoutes);
-routes.use('/cards', cardRoutes);
+routes.use('/users', checkAuth, userRoutes);
+routes.use('/cards', checkAuth, cardRoutes);
 routes.use('*', (req, res, next) => next(new NotFoundError(message.errorNotFound.page)));
 
 module.exports = routes;

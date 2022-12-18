@@ -33,7 +33,7 @@ const createUser = async (req, res, next) => {
     const { email, password, name, about, avatar } = req.body;
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hash, name, about, avatar });
-    return res.status(CREATED).json(user);
+    return res.status(CREATED).json({ email: user.email, name: user.name, about: user.about, avatar: user.avatar });
   } catch (err) {
     console.log(err);
     next(err);
