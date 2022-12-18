@@ -91,8 +91,9 @@ const login = async (req, res, next) => {
     const payload = { _id: user._id };
     const privateKey = 'my_secret_key';
     const token = JWT.sign(payload, privateKey, { expiresIn: '7d' });
-    res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
-    return res.status(SUCCESS).send({ message: message.success.login });
+    // res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
+    // return res.status(SUCCESS).send({ message: message.success.login });
+    return res.status(SUCCESS).send({ token });
   } catch (err) {
     console.log(err);
     next(err);

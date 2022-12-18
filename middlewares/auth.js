@@ -3,7 +3,8 @@ const { message } = require('../helpers/constants');
 const { UnauthorizedError } = require('../helpers/errors')
 
 const checkAuth = (req, res, next) => {
-  const authorization = req.cookies.jwt;
+  const { authorization } = req.headers;
+  // const authorization = req.cookies.jwt;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return next(new UnauthorizedError(message.errorIncorrectDate.authorization));
