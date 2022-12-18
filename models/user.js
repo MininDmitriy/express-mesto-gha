@@ -8,28 +8,28 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (value) => isEmail(value),
-      message: 'An incorrect e-mail has been entered'
+      message: 'An incorrect e-mail has been entered',
     },
   },
   password: {
     type: String,
     required: true,
     minlength: 8,
-    select: false
+    select: false,
   },
   name: {
     type: String,
     required: false,
     minLength: 2,
     maxLength: 30,
-    default: 'Жак-Ив Кусто'
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     required: false,
     minLength: 2,
     maxLength: 30,
-    default: 'Исследователь'
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (value) => /^(http|https):\/\/[^ "]+$/.test(value),
-      message: 'Not a valid URL!'
+      message: 'Not a valid URL!',
     },
   },
 });

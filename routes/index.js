@@ -1,11 +1,11 @@
 const routes = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const userRoutes = require('./users');
 const cardRoutes = require('./cards');
 const { message } = require('../helpers/constants');
-const { celebrate, Joi } = require('celebrate');
-const validator = require('validator');
 const { login, createUser } = require('../controllers/users');
-const { NotFoundError } = require('../helpers/errors');
+const NotFoundError = require('../errors/NotFoundError');
 const { checkAuth } = require('../middlewares/auth');
 
 routes.post('/signin', celebrate({

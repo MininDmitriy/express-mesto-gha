@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const { message, SUCCESS, CREATED } = require('../helpers/constants');
-const { NotFoundError, ForbiddenError } = require('../helpers/errors');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const getCards = async (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ const getCards = async (req, res, next) => {
     return res.status(SUCCESS).json(cards);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -19,7 +20,7 @@ const createCard = async (req, res, next) => {
     return res.status(CREATED).json(card);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -37,7 +38,7 @@ const deleteCard = async (req, res, next) => {
     return res.status(SUCCESS).json({ message: message.success.cardDelete });
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -56,7 +57,7 @@ const likeCard = async (req, res, next) => {
     return res.status(SUCCESS).json({ message: message.success.likeCard });
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -75,7 +76,7 @@ const dislikeCard = async (req, res, next) => {
     return res.status(SUCCESS).json({ message: message.success.dislikeCard });
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 

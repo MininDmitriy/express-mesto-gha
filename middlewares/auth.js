@@ -1,10 +1,9 @@
 const JWT = require('jsonwebtoken');
 const { message } = require('../helpers/constants');
-const { UnauthorizedError } = require('../helpers/errors')
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const checkAuth = (req, res, next) => {
   const { authorization } = req.headers;
-  // const authorization = req.cookies.jwt;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return next(new UnauthorizedError(message.errorIncorrectDate.authorization));
@@ -16,13 +15,13 @@ const checkAuth = (req, res, next) => {
   try {
     const privateKey = 'my_secret_key';
     payload = JWT.verify(token, privateKey);
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     return next(new UnauthorizedError(message.errorIncorrectDate.token));
   }
 
   req.user = payload;
-  next();
+  return next();
 };
 
 module.exports = { checkAuth };

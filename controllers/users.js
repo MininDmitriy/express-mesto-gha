@@ -1,8 +1,9 @@
-const User = require('../models/user');
-const { message, SUCCESS, CREATED } = require('../helpers/constants');
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken');
-const { NotFoundError, UnauthorizedError } = require('../helpers/errors');
+const User = require('../models/user');
+const { message, SUCCESS, CREATED } = require('../helpers/constants');
+const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const getUsers = async (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ const getUsers = async (req, res, next) => {
     return res.status(SUCCESS).json(users);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -24,19 +25,25 @@ const getUser = async (req, res, next) => {
     return res.status(SUCCESS).json(user);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
 const createUser = async (req, res, next) => {
   try {
-    const { email, password, name, about, avatar } = req.body;
+    const {
+      email, password, name, about, avatar,
+    } = req.body;
     const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hash, name, about, avatar });
-    return res.status(CREATED).json({ email: user.email, name: user.name, about: user.about, avatar: user.avatar });
+    const user = await User.create({
+      email, password: hash, name, about, avatar,
+    });
+    return res.status(CREATED).json({
+      email: user.email, name: user.name, about: user.about, avatar: user.avatar,
+    });
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -54,7 +61,7 @@ const updateInfoUser = async (req, res, next) => {
     return res.status(SUCCESS).json(user);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
@@ -73,14 +80,14 @@ const updateAvatarUser = async (req, res, next) => {
     return res.status(SUCCESS).json(newUser);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
 };
 
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({email}).select('+password');
+    const user = await User.findOne({ email }).select('+password');
     if (user === null) {
       return next(new UnauthorizedError(message.errorIncorrectDate.login));
     }
@@ -91,14 +98,12 @@ const login = async (req, res, next) => {
     const payload = { _id: user._id };
     const privateKey = 'my_secret_key';
     const token = JWT.sign(payload, privateKey, { expiresIn: '7d' });
-    // res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
-    // return res.status(SUCCESS).send({ message: message.success.login });
     return res.status(SUCCESS).send({ token });
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
-}
+};
 
 const getInfoTheUser = async (req, res, next) => {
   try {
@@ -107,9 +112,9 @@ const getInfoTheUser = async (req, res, next) => {
     return res.status(SUCCESS).send(user);
   } catch (err) {
     console.log(err);
-    next(err);
+    return next(err);
   }
-}
+};
 
 module.exports = {
   getUsers,
@@ -118,5 +123,5 @@ module.exports = {
   updateInfoUser,
   updateAvatarUser,
   login,
-  getInfoTheUser
+  getInfoTheUser,
 };
