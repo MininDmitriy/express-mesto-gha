@@ -24,7 +24,7 @@ userRoutes.patch('/me/avatar', checkAuth, celebrate({
       if (/^(http|https):\/\/[^ "]+$/.test(value)) {
         return value;
       }
-      return helpers.message('Not a valid URL!');
+      return helpers.message('Передан некорректный URL-адрес аватара пользователя');
     }),
   }),
 }), updateAvatarUser);

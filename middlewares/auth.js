@@ -1,11 +1,12 @@
 const JWT = require('jsonwebtoken');
-const { message, errors } = require('../constants');
+const { message } = require('../helpers/constants');
+const { UnauthorizedError } = require('../helpers/errors')
 
 const checkAuth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res.status(errors.errorUnauthorized).send({ message: message.errorIncorrectDate.authorization });
+    return next(new UnauthorizedError(message.errorIncorrectDate.authorization));
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -16,7 +17,7 @@ const checkAuth = (req, res, next) => {
     payload = JWT.verify(token, privateKey);
   } catch(err) {
     console.log(err);
-    return res.status(errors.errorUnauthorized).send({ message: message.errorIncorrectDate.authorization });
+    return next(new UnauthorizedError(message.errorIncorrectDate.token));
   }
 
   req.user = payload;
