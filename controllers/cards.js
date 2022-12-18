@@ -30,9 +30,13 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
+    const userId = req.user._id;
     const card = await Card.findByIdAndRemove(cardId);
     if (card === null) {
       return res.status(errors.errorNotFound).json({ message: message.errorNotFound.cardId });
+    }
+    if (userId !== JSON.stringify(card.owner).replace(/\W/g, '')) {
+      return res.status(errors.errorForbidden).send({ message: message.errorForbidden });
     }
     return res.status(errors.success).json({ message: message.success.cardDelete });
   } catch (err) {
