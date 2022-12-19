@@ -1,27 +1,32 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const routes = require('./routes/index');
+const { handlerErrors } = require('./middlewares/hendlerErrors');
 
 const PORT = 3000;
 
 const app = express();
 
+const limiter = rateLimit({
+  max: 200,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many request from this IP',
+});
+
 app.use(express.json());
+
+app.use(limiter);
+
+app.use(helmet());
 
 app.use('/', routes);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  if (err.code === 11000) {
-    return res.status(409).send({ message: 'Такой пользователь уже существует' });
-  }
-
-  return res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-});
+app.use(handlerErrors);
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,

@@ -16,7 +16,6 @@ const checkAuth = (req, res, next) => {
     const privateKey = 'my_secret_key';
     payload = JWT.verify(token, privateKey);
   } catch (err) {
-    console.log(err);
     return next(new UnauthorizedError(message.errorIncorrectDate.token));
   }
 

@@ -10,7 +10,6 @@ const getUsers = async (req, res, next) => {
     const users = await User.find({});
     return res.status(SUCCESS).json(users);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -24,7 +23,6 @@ const getUser = async (req, res, next) => {
     }
     return res.status(SUCCESS).json(user);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -42,7 +40,6 @@ const createUser = async (req, res, next) => {
       email: user.email, name: user.name, about: user.about, avatar: user.avatar,
     });
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -60,7 +57,6 @@ const updateInfoUser = async (req, res, next) => {
     }
     return res.status(SUCCESS).json(user);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -79,7 +75,6 @@ const updateAvatarUser = async (req, res, next) => {
     });
     return res.status(SUCCESS).json(newUser);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -100,7 +95,6 @@ const login = async (req, res, next) => {
     const token = JWT.sign(payload, privateKey, { expiresIn: '7d' });
     return res.status(SUCCESS).send({ token });
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -111,7 +105,6 @@ const getInfoTheUser = async (req, res, next) => {
     const user = await User.findById(userId);
     return res.status(SUCCESS).send(user);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };

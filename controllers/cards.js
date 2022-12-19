@@ -8,7 +8,6 @@ const getCards = async (req, res, next) => {
     const cards = await Card.find({}).populate(['owner', 'likes']);
     return res.status(SUCCESS).json(cards);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -19,7 +18,6 @@ const createCard = async (req, res, next) => {
     const card = await Card.create({ name, link, owner: req.user._id });
     return res.status(CREATED).json(card);
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -37,7 +35,6 @@ const deleteCard = async (req, res, next) => {
     }
     return res.status(SUCCESS).json({ message: message.success.cardDelete });
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -56,7 +53,6 @@ const likeCard = async (req, res, next) => {
     );
     return res.status(SUCCESS).json({ message: message.success.likeCard });
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
@@ -75,7 +71,6 @@ const dislikeCard = async (req, res, next) => {
     );
     return res.status(SUCCESS).json({ message: message.success.dislikeCard });
   } catch (err) {
-    console.log(err);
     return next(err);
   }
 };
