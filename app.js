@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const routes = require('./routes/index');
 const { handlerErrors } = require('./middlewares/hendlerErrors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const PORT = 3000;
 
@@ -22,7 +23,11 @@ app.use(limiter);
 
 app.use(helmet());
 
+app.use(requestLogger);
+
 app.use('/', routes);
+
+app.use(errorLogger);
 
 app.use(errors());
 
